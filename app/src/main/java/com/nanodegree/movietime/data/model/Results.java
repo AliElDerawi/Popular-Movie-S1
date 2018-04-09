@@ -1,46 +1,36 @@
 package com.nanodegree.movietime.data.model;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
 
+@Parcel
 public class Results {
 
     @SerializedName("vote_count")
-    @Expose
     private Integer voteCount;
     @SerializedName("id")
-    @Expose
     private int id;
     @SerializedName("video")
-    @Expose
     private Boolean hasVideo;
     @SerializedName("vote_average")
-    @Expose
     private Float averageScore;
     @SerializedName("title")
-    @Expose
     private String title;
     @SerializedName("popularity")
-    @Expose
     private Double popularity;
     @SerializedName("poster_path")
-    @Expose
     private  String posterPath;
     @SerializedName("original_language")
-    @Expose
     private  String baseLanguage;
     @SerializedName("adult")
-    @Expose
     private Boolean isAdult;
     @SerializedName("overview")
-    @Expose
     private String overview;
     @SerializedName("release_date")
-    @Expose
     private String releaseDate;
 
-    public Results() {
+    Results() {
     }
 
     public Integer getVoteCount() {

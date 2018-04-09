@@ -1,7 +1,6 @@
 package com.nanodegree.movietime.features;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -13,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.nanodegree.movietime.R;
+import com.nanodegree.movietime.data.model.OnItemClickListener;
 import com.nanodegree.movietime.data.model.Results;
 import com.nanodegree.movietime.util.GlideApp;
 
@@ -34,11 +34,13 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
     static final String MOVIETITLE = "title";
     static final String MOVIERATING = "rating";
     static final String MOVIEDATE = "date";
+    private final OnItemClickListener listener;
 
-    MoviePosterAdapter(Context mContext, ArrayList<Results> results) {
+    MoviePosterAdapter(Context mContext, ArrayList<Results> results , OnItemClickListener listener) {
         super();
         this.mContext = mContext;
         this.results = results;
+        this.listener = listener;
     }
 
 
@@ -81,19 +83,13 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
             if (view == ivPoster) {
 //                if (isOnline()) {
                     int position = getAdapterPosition();
-                    int id = results.get(position).getId();
+
+                    listener.onItemClick(results,position);
 //                    if (mToast != null)
 //                        mToast.cancel();
 //                    mToast = Toast.makeText(view.getContext(), String.valueOf(id), Toast.LENGTH_LONG);
 //                    mToast.show();
-                    Intent toMovieDetailIntent = new Intent(view.getContext(),MovieDetail.class);
-                    toMovieDetailIntent.putExtra(MOVIEPOSTERPATH,results.get(position).getPosterPath());
-                    toMovieDetailIntent.putExtra(MOVIEOVERVIEW,results.get(position).getOverview());
-                    toMovieDetailIntent.putExtra(MOVIERATING,results.get(position).getAverageScore());
-                    toMovieDetailIntent.putExtra(MOVIETITLE,results.get(position).getTitle().trim());
-                    toMovieDetailIntent.putExtra(MOVIEDATE,results.get(position).getReleaseDate());
 
-                    view.getContext().startActivity(toMovieDetailIntent);
 //                } else {
 //                    Toast.makeText(view.getContext(),mContext.getResources().getString(R.string.no_internet_message),Toast.LENGTH_LONG).show();
 //                }

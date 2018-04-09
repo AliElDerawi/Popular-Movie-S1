@@ -17,7 +17,7 @@
         app:itemIconTint="@drawable/ic_nav"
         app:itemTextColor="@drawable/ic_nav"
         android:layout_marginStart="0dp"
-        android:background="?android:attr/windowBackground"
+        android:background="@color/colorPrimaryDark"
         android:layout_alignParentBottom="true"
         app:menu="@menu/navigation" />
 

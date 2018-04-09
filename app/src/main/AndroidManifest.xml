@@ -27,11 +27,10 @@
         <activity
             android:name=".features.HomeActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"></activity>
+           ></activity>
         <activity
             android:name=".features.MovieDetail"
             android:parentActivityName=".features.HomeActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

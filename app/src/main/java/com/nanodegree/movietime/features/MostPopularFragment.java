@@ -1,6 +1,7 @@
 package com.nanodegree.movietime.features;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.nanodegree.movietime.BuildConfig;
 import com.nanodegree.movietime.R;
+import com.nanodegree.movietime.data.model.OnItemClickListener;
 import com.nanodegree.movietime.data.model.Results;
 import com.nanodegree.movietime.data.model.request.MovieRequest;
 import com.nanodegree.movietime.util.MySingleton;
@@ -33,6 +35,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import static com.android.volley.Request.Method.GET;
+import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEDATE;
+import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEOVERVIEW;
+import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEPOSTERPATH;
+import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIERATING;
+import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIETITLE;
 import static com.nanodegree.movietime.util.Contracts.BASE_URL;
 import static com.nanodegree.movietime.util.Contracts.MOST_POPULAR_MOVIE;
 
@@ -111,7 +118,18 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
 
                         results.addAll(movieRequest.getData());
                         Log.d(TAG, "onResponse: mResult.size > " + results.size());
-                        MoviePosterAdapter moviePosterAdapter = new MoviePosterAdapter(getContext(),results);
+                        MoviePosterAdapter moviePosterAdapter = new MoviePosterAdapter(getContext(), results, new OnItemClickListener() {
+                            @Override
+                            public void onItemClick(ArrayList<Results> results, int position) {
+                                Intent toMovieDetailIntent = new Intent(getContext(),MovieDetail.class);
+                                toMovieDetailIntent.putExtra(MOVIEPOSTERPATH,results.get(position).getPosterPath());
+                                toMovieDetailIntent.putExtra(MOVIEOVERVIEW,results.get(position).getOverview());
+                                toMovieDetailIntent.putExtra(MOVIERATING,results.get(position).getAverageScore());
+                                toMovieDetailIntent.putExtra(MOVIETITLE,results.get(position).getTitle().trim());
+                                toMovieDetailIntent.putExtra(MOVIEDATE,results.get(position).getReleaseDate());
+                                startActivity(toMovieDetailIntent);
+                            }
+                        });
                         rvImagePoster.setAdapter(moviePosterAdapter);
                         rvImagePoster.setHasFixedSize(true);
                     }
