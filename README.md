@@ -27,7 +27,7 @@ Useful links:
 * [themoviedb.org](https://www.themoviedb.org/documentation/api), API used to offer movies for the app. 
 * [API Key Mangement for Github Repositories](https://gist.github.com/curioustechizen/9f7d745f9f5f51355bd6), to prevet pushing your API key at your repositories.
 
-Importants Note:
+Important Note:
 -------
 * You should use your own API Key after create an account for you in themoviedb API, then include it in your secrets.properties file as descriped in API Key Management link above.
 
@@ -45,10 +45,18 @@ SnapShots from the app:
   <img src="./images/activity_main.png" width="300" height="530" />
 </p>
 
+* No Internet Screen:
+
+<p align="center">
+  <img src="./images/screen_no_internet.png" width="300" height="530" />
+</p>
+
+
 * Movie Detail Screen:
 
 <p align="center">
 <img src="./images/activity_detail.png" width="300" height="530" />
 </p>
+
 
 
