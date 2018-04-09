@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">MovieTime</string>
+
+    <string name="favourite_fragment">Favourite Fragment</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="favourite">Favourite</string>
+    <string name="btn_try_again">TRY AGAIN</string>
+    <string name="sorry_error_happen">Sorry some errors happened please try again</string>
+    <string name="no_internet_message">Check your internet connection and try again</string>
+    <string name="text_rating">Rating:</string>
+    <string name="text_overview">Overview</string>
+    <string name="poster_description">Movie Poster</string>
+    <string name="no_internet_connection_layout">No Internet Connection Layout</string>
+
+</resources>

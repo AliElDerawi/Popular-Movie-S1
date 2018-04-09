@@ -1,0 +1,8 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <integer name="column_span">2</integer>
+    <dimen name="app_bar_height">320dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="card_detail_margin">24dp</dimen>
+    <dimen name="poster_size">280dp</dimen>
+</resources>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".features.MovieDetail"
+    tools:showIn="@layout/activity_movie_detail"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/card_detail_margin"
+        android:layout_marginStart="@dimen/card_detail_margin"
+        android:layout_marginEnd="@dimen/card_detail_margin"
+        android:layout_marginRight="@dimen/card_detail_margin"
+        android:layout_marginTop="@dimen/card_detail_margin"
+        android:layout_marginBottom="@dimen/card_detail_margin"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/layout_title"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:id="@+id/tv_title"
+                android:text="Dark Knight"
+                android:textStyle="bold"
+                android:textColor="@color/color_Blue_03"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:id="@+id/tv_date"
+                android:textColor="@color/color_Blue_03"
+                android:text="(2013)"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="end"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@+id/layout_title"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:id="@+id/layout_rating"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_rating"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textColor="@color/colorOrange_01"
+                android:textStyle="bold"
+                android:paddingRight="8dp"
+                />
+            <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:id="@+id/ratingBar"
+                android:numStars="5"
+                android:stepSize="0.1"
+                app:mrb_fillBackgroundStars="true"
+                app:mrb_progressTint="@color/colorOrange_01"
+                android:rating="2"
+                style="@style/Widget.MaterialRatingBar.RatingBar"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/layout_overview"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:layout_below="@+id/layout_rating"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_overview"
+                android:textColor="@color/color_Blue_03"
+                />
+            <View
+                android:id="@+id/div2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/colorAccent" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/tv_overview"
+                android:layout_marginTop="12dp"
+                android:fontFamily="monospace"
+                android:text="Batman ...."
+                android:textColor="@color/colorDarkGray"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</android.support.v4.widget.NestedScrollView>
