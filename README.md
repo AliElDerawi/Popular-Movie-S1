@@ -48,7 +48,7 @@ SnapShots from the app:
 * No Internet Screen:
 
 <p align="center">
-  <img src="./images/screen_no_internet.png" width="300" height="530" />
+  <img src="./images/screen_no_internet_en.png" width="300" height="530" />
 </p>
 
 
