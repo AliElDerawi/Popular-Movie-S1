@@ -7,6 +7,7 @@ import org.parceler.Parcel;
 @Parcel
 public class Results {
 
+
     @SerializedName("vote_count")
     private Integer voteCount;
     @SerializedName("id")

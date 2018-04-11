@@ -30,7 +30,6 @@
            ></activity>
         <activity
             android:name=".features.MovieDetail"
-            android:parentActivityName=".features.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
