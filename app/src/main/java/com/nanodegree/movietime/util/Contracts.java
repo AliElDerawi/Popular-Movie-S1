@@ -10,5 +10,8 @@ public class Contracts {
     public static final String IMAGE_SIZE_FULL = "w500/";
     public static final String BASE_URL = "http://api.themoviedb.org/3/movie/";
     public static final String MOST_POPULAR_MOVIE = "popular";
+    public static final String MOVIE_TRAILER = "/videos";
+    public static final String MOVIE_REVIEW = "/reviews";
     public static final String TOP_RATED_MOVIE = "top_rated";
+
 }

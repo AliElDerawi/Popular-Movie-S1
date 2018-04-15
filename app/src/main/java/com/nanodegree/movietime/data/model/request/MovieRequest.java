@@ -1,7 +1,7 @@
 package com.nanodegree.movietime.data.model.request;
 
 import com.google.gson.annotations.SerializedName;
-import com.nanodegree.movietime.data.model.Results;
+import com.nanodegree.movietime.data.model.MovieResults;
 
 import org.parceler.Parcel;
 
@@ -16,7 +16,7 @@ public class MovieRequest {
     @SerializedName("total_pages")
     private int totalPages;
     @SerializedName("results")
-    private ArrayList<Results> data = null;
+    private ArrayList<MovieResults> data = null;
 
     public int getPage() {
         return page;
@@ -42,11 +42,11 @@ public class MovieRequest {
         this.totalPages = totalPages;
     }
 
-    public ArrayList<Results> getData() {
+    public ArrayList<MovieResults> getData() {
         return data;
     }
 
-    public void setData(ArrayList<Results> data) {
+    public void setData(ArrayList<MovieResults> data) {
         this.data = data;
     }
 }

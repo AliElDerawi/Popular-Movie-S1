@@ -25,8 +25,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.nanodegree.movietime.BuildConfig;
 import com.nanodegree.movietime.R;
+import com.nanodegree.movietime.data.model.MovieResults;
 import com.nanodegree.movietime.data.model.OnItemClickListener;
-import com.nanodegree.movietime.data.model.Results;
 import com.nanodegree.movietime.data.model.request.MovieRequest;
 import com.nanodegree.movietime.util.MySingleton;
 
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 
 import static com.android.volley.Request.Method.GET;
 import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEDATE;
+import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEID;
 import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEOVERVIEW;
 import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEPOSTERPATH;
 import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIERATING;
@@ -50,7 +51,7 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
     private RelativeLayout internetLayout;
     private ProgressBar mProgressBar ;
     private Button resetConnection;
-    private ArrayList<Results> results = new ArrayList<>();
+    private ArrayList<MovieResults> results = new ArrayList<>();
     private final String TAG = "MostPopularFragment";
 
     public MostPopularFragment() {
@@ -120,13 +121,14 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
                         Log.d(TAG, "onResponse: mResult.size > " + results.size());
                         MoviePosterAdapter moviePosterAdapter = new MoviePosterAdapter(getContext(), results, new OnItemClickListener() {
                             @Override
-                            public void onItemClick(ArrayList<Results> results, int position) {
+                            public void onItemClick(ArrayList<MovieResults> results, int position) {
                                 Intent toMovieDetailIntent = new Intent(getContext(),MovieDetail.class);
                                 toMovieDetailIntent.putExtra(MOVIEPOSTERPATH,results.get(position).getPosterPath());
                                 toMovieDetailIntent.putExtra(MOVIEOVERVIEW,results.get(position).getOverview());
                                 toMovieDetailIntent.putExtra(MOVIERATING,results.get(position).getAverageScore());
                                 toMovieDetailIntent.putExtra(MOVIETITLE,results.get(position).getTitle().trim());
                                 toMovieDetailIntent.putExtra(MOVIEDATE,results.get(position).getReleaseDate());
+                                toMovieDetailIntent.putExtra(MOVIEID,results.get(position).getId());
                                 startActivity(toMovieDetailIntent);
                             }
                         });
@@ -140,8 +142,10 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 mProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), getString(R.string.sorry_error_happen),
-                        Toast.LENGTH_SHORT).show();
+                if (isAdded()) {
+                    Toast.makeText(getActivity(), getString(R.string.sorry_error_happen),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
         MySingleton.getInstance(getContext()).addToRequestQueue(request);

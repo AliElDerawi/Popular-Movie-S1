@@ -12,5 +12,6 @@
     <string name="text_overview">Overview</string>
     <string name="poster_description">Movie Poster</string>
     <string name="no_internet_connection_layout">No Internet Connection Layout</string>
+    <string name="text_trailers">Trailers</string>
 
 </resources>
