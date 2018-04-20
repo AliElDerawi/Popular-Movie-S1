@@ -14,8 +14,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_top_rated" />
-                            <entry key="sourceFile" value="D:\NanoDegree\ic_top_rated.svg" />
+                            <entry key="outputName" value="ic_fill_favorite" />
+                            <entry key="sourceFile" value="D:\NanoDegree\images\ic_fill_favorite.svg" />
                           </map>
                         </option>
                       </PersistentState>

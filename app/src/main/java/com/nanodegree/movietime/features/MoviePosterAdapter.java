@@ -79,7 +79,7 @@ public class MoviePosterAdapter extends RecyclerView.Adapter<MoviePosterAdapter.
         public void onClick(View view) {
             if (view == ivPoster) {
                     int position = getAdapterPosition();
-                    listener.onItemClick(results,position);
+                    listener.onItemClick(position);
             }
         }
     }

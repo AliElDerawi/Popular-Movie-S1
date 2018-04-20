@@ -30,7 +30,20 @@
            ></activity>
         <activity
             android:name=".features.MovieDetail"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".features.HomeActivity"
+            android:launchMode="singleTask"
+            ></activity>
+        <activity android:name=".features.WebActivity"
+            android:parentActivityName=".features.MovieDetail"
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+
+        <provider
+            android:authorities="com.nanodegree.movietime"
+            android:name="com.nanodegree.movietime.data.model.FavouriteContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

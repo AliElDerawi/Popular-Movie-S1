@@ -1,17 +1,18 @@
 package com.nanodegree.movietime.features;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nanodegree.movietime.R;
 import com.nanodegree.movietime.data.model.OnItemClickListener;
-import com.nanodegree.movietime.data.model.TrailerResults;
+import com.nanodegree.movietime.data.model.request.ReviewResults;
 
 import java.util.ArrayList;
 
@@ -19,12 +20,12 @@ import java.util.ArrayList;
  * Created by ali19 on 3/24/2018.
  */
 
-public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapter.ViewHolder> {
+public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.ViewHolder> {
     private Context mContext;
-    private ArrayList<TrailerResults> results;
+    private ArrayList<ReviewResults> results;
     private final OnItemClickListener listener;
 
-    MovieTrailerAdapter(Context mContext, ArrayList<TrailerResults> results , OnItemClickListener listener) {
+    MovieReviewAdapter(Context mContext, ArrayList<ReviewResults> results , OnItemClickListener listener) {
         super();
         this.mContext = mContext;
         this.results = results;
@@ -36,7 +37,7 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.movie_trailer_item, parent, false);
+        View view = inflater.inflate(R.layout.movie_review_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -52,25 +53,30 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView tvTitle;
-        ImageView ivPlayer;
+        TextView tvAuthor;
+        TextView tvReview;
+        TextView tvReadOnline;
 
         ViewHolder(View itemView) {
             super(itemView);
-            tvTitle = itemView.findViewById(R.id.tv_trailer_title);
-            ivPlayer = itemView.findViewById(R.id.iv_player);
-            ivPlayer.setOnClickListener(this);
-            tvTitle.setOnClickListener(this);
+            tvAuthor = itemView.findViewById(R.id.tv_author);
+            tvReadOnline = itemView.findViewById(R.id.tv_read_online);
+            tvReview = itemView.findViewById(R.id.tv_review);
+            tvReadOnline.setOnClickListener(this);
         }
 
         private void onBind(int position) {
-            String trailerName = results.get(position).getName();
-            tvTitle.setText(trailerName);
+            String movieReview = results.get(position).getContent();
+            tvReview.setText(movieReview);
+            String movieAuthor = results.get(position).getAuthor();
+            CharSequence concat = TextUtils.concat("  ", movieAuthor);
+            tvAuthor.setText(concat);
+            tvReadOnline.setPaintFlags(tvReadOnline.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         }
 
         @Override
         public void onClick(View view) {
-            if (view == ivPlayer || view == tvTitle) {
+            if (view == tvReadOnline) {
                     int position = getAdapterPosition();
                     listener.onItemClick(position);
             }

@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -34,6 +36,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.android.volley.Request.Method.GET;
 import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEDATE;
 import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEID;
@@ -46,8 +51,8 @@ import static com.nanodegree.movietime.util.Contracts.MOST_POPULAR_MOVIE;
 
 
 public class MostPopularFragment extends Fragment implements View.OnClickListener {
-
-    private RecyclerView rvImagePoster;
+    @BindView(R.id.rv_image_poster)
+    RecyclerView rvImagePoster;
     private RelativeLayout internetLayout;
     private ProgressBar mProgressBar ;
     private Button resetConnection;
@@ -62,15 +67,16 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_most_popular, container, false);
+
+        View view =  inflater.inflate(R.layout.fragment_most_popular, container, false);
+        ButterKnife.bind(this,view);
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rvImagePoster = view.findViewById(R.id.rv_image_poster);
         mProgressBar = getActivity().findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.GONE);
         internetLayout = getActivity().findViewById(R.id.layout_no_internet);
@@ -121,7 +127,7 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
                         Log.d(TAG, "onResponse: mResult.size > " + results.size());
                         MoviePosterAdapter moviePosterAdapter = new MoviePosterAdapter(getContext(), results, new OnItemClickListener() {
                             @Override
-                            public void onItemClick(ArrayList<MovieResults> results, int position) {
+                            public void onItemClick(int position) {
                                 Intent toMovieDetailIntent = new Intent(getContext(),MovieDetail.class);
                                 toMovieDetailIntent.putExtra(MOVIEPOSTERPATH,results.get(position).getPosterPath());
                                 toMovieDetailIntent.putExtra(MOVIEOVERVIEW,results.get(position).getOverview());
@@ -166,8 +172,17 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
                 internetLayout.setVisibility(View.GONE);
                 requestTopRatedMovie();
             } else {
-                Toast.makeText(view.getContext(),getContext().getResources().getString(R.string.no_internet_message),Toast.LENGTH_LONG).show();
+                showSnackBar(view);
             }
         }
+    }
+
+    private void showSnackBar(View view){
+        Snackbar snackbar =  Snackbar.make(view,getContext().getResources().getString(R.string.no_internet_message),Snackbar.LENGTH_LONG);
+        View sbView = snackbar.getView();
+        sbView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(getResources().getColor(R.color.color_Blue_03));
+        snackbar.show();
     }
 }

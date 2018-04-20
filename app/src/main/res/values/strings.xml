@@ -13,5 +13,8 @@
     <string name="poster_description">Movie Poster</string>
     <string name="no_internet_connection_layout">No Internet Connection Layout</string>
     <string name="text_trailers">Trailers</string>
+    <string name="text_review">Review</string>
+    <string name="title_author">Author: </string>
+    <string name="title_movie_detail">Movie Information</string>
 
 </resources>

@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +36,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.android.volley.Request.Method.GET;
 import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEDATE;
 import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEID;
@@ -49,8 +53,8 @@ import static com.nanodegree.movietime.util.Contracts.TOP_RATED_MOVIE;
  * A simple {@link Fragment} subclass.
  */
 public class TopRatedFragment extends Fragment implements View.OnClickListener{
-
-    private RecyclerView rvImagePoster;
+    @BindView(R.id.rv_image_poster)
+    RecyclerView rvImagePoster;
     private RelativeLayout internetLayout;
     private ProgressBar mProgressBar ;
     private Button resetConnection;
@@ -65,15 +69,15 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_top_rated, container, false);
+        View view = inflater.inflate(R.layout.fragment_top_rated, container, false);
+        ButterKnife.bind(this,view);
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        ButterKnife.bind(this,view);
 
-        rvImagePoster = view.findViewById(R.id.rv_image_poster);
         mProgressBar = getActivity().findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.GONE);
         internetLayout = getActivity().findViewById(R.id.layout_no_internet);
@@ -121,17 +125,11 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
                                 new Gson().fromJson(response.toString(), MovieRequest.class);
 
                         results.addAll(movieRequest.getData());
-//                        ArrayList<String> imageUrl = new ArrayList<>();
-//                        ArrayList<String> imgId = new ArrayList<>();
-//
-//                        for (int i  = 0 ; i < data.size();i++){
-//                            imageUrl.add(data.get(i).getPosterPath());
-//                            imgId.add(String.valueOf(data.get(i).getId())
-//                        }
+
                         Log.d(TAG, "onResponse: mResult.size > " + results.size());
                         MoviePosterAdapter moviePosterAdapter = new MoviePosterAdapter(getContext(), results, new OnItemClickListener() {
                             @Override
-                            public void onItemClick(ArrayList<MovieResults> results, int position) {
+                            public void onItemClick(int position) {
                                 Intent toMovieDetailIntent = new Intent(getContext(),MovieDetail.class);
                                 toMovieDetailIntent.putExtra(MOVIEPOSTERPATH,results.get(position).getPosterPath());
                                 toMovieDetailIntent.putExtra(MOVIEOVERVIEW,results.get(position).getOverview());
@@ -176,7 +174,7 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
                 internetLayout.setVisibility(View.GONE);
                 requestTopRatedMovie();
             } else {
-                Toast.makeText(view.getContext(),getContext().getResources().getString(R.string.no_internet_message),Toast.LENGTH_LONG).show();
+                Snackbar.make(view,getContext().getResources().getString(R.string.no_internet_message),Snackbar.LENGTH_LONG).show();
             }
         }
     }
