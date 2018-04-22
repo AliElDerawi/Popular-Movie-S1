@@ -2,26 +2,28 @@ package com.nanodegree.movietime.features;
 
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nanodegree.movietime.R;
 import com.nanodegree.movietime.util.Contracts.FavouriteMovieEntry;
-import com.nanodegree.movietime.util.FavouriteMovieDbHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,16 +34,16 @@ import butterknife.ButterKnife;
 public class FavouriteFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private RelativeLayout internetLayout;
-    private ProgressBar mProgressBar ;
+    private ProgressBar mProgressBar;
     @BindView(R.id.rv_favourite)
     RecyclerView rvFavourite;
     @BindView(R.id.tv_favourite)
     TextView tvFavourite;
 
-    private SQLiteDatabase sqLiteDatabase;
     private MovieFavouriteAdapter movieFavouriteAdapter;
     private Cursor mCursor;
     private static final int FAVOURITE_LOADER_ID = 0;
+    private static final String TAG = "FavouriteFragment";
 
     public FavouriteFragment() {
         // Required empty public constructor
@@ -52,8 +54,8 @@ public class FavouriteFragment extends Fragment implements LoaderManager.LoaderC
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_favourite, container, false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_favourite, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -65,25 +67,15 @@ public class FavouriteFragment extends Fragment implements LoaderManager.LoaderC
         internetLayout = getActivity().findViewById(R.id.layout_no_internet);
         internetLayout.setVisibility(View.GONE);
 
-        FavouriteMovieDbHelper dbHelper  = new FavouriteMovieDbHelper(view.getContext());
-        sqLiteDatabase = dbHelper.getWritableDatabase();
-        rvFavourite.setLayoutManager(new LinearLayoutManager(view.getContext(),LinearLayoutManager.VERTICAL,false));
+        rvFavourite.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
         rvFavourite.setNestedScrollingEnabled(true);
 
+        movieFavouriteAdapter = new MovieFavouriteAdapter(view.getContext());
+        rvFavourite.setHasFixedSize(true);
+        rvFavourite.setAdapter(movieFavouriteAdapter);
 
 
-        mCursor = getAllMovie();
-        if (mCursor.getCount() > 0){
-            movieFavouriteAdapter = new MovieFavouriteAdapter(view.getContext(),mCursor);
-            rvFavourite.setHasFixedSize(true);
-            rvFavourite.setAdapter(movieFavouriteAdapter);
-
-        } else {
-            rvFavourite.setVisibility(View.GONE);
-            tvFavourite.setVisibility(View.VISIBLE);
-        }
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
@@ -91,48 +83,84 @@ public class FavouriteFragment extends Fragment implements LoaderManager.LoaderC
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                long id = (long)viewHolder.itemView.getTag();
-                if (removeMovie(id)){
-                    movieFavouriteAdapter.swapCursor(getAllMovie());
-                    Cursor cursor = getAllMovie();
-                    if (cursor.getCount() == 0 ) {
-                        rvFavourite.setVisibility(View.GONE);
-                        tvFavourite.setVisibility(View.VISIBLE);
-                    }
+                long id = (long) viewHolder.itemView.getTag();
+                if (removeMovie(id) > 0) {
+                    getActivity().getSupportLoaderManager().restartLoader(FAVOURITE_LOADER_ID, null, FavouriteFragment.this);
+                } else {
+                    Toast.makeText(getContext(), "Sorry some error happen !", Toast.LENGTH_LONG).show();
                 }
             }
         }).attachToRecyclerView(rvFavourite);
+
+        getActivity().getSupportLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, this);
+
     }
 
-    private Cursor getAllMovie(){
-        return sqLiteDatabase.query(
-                FavouriteMovieEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                FavouriteMovieEntry.COLUMN_MOVIE_RATING + " DESC"
-        );
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null)
+            getActivity().getSupportLoaderManager().restartLoader(FAVOURITE_LOADER_ID, null, this);
     }
 
-    private boolean removeMovie(long id){
-        return sqLiteDatabase.delete(FavouriteMovieEntry.TABLE_NAME,FavouriteMovieEntry._ID + "=" + id,null)> 0 ;
+
+    private int removeMovie(long id) {
+        Uri uri = FavouriteMovieEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(String.valueOf(id)).build();
+        return getActivity().getContentResolver().delete(uri, null, null);
     }
 
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return null;
+        return new AsyncTaskLoader<Cursor>(getContext()) {
+            Cursor mFavouriteData = null;
+
+            @Override
+            protected void onStartLoading() {
+                if (mFavouriteData != null) {
+                    deliverResult(mFavouriteData);
+                } else {
+                    forceLoad();
+                }
+            }
+
+            @Nullable
+            @Override
+            public Cursor loadInBackground() {
+                try {
+                    return getActivity().getContentResolver().query(FavouriteMovieEntry.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            FavouriteMovieEntry.COLUMN_MOVIE_RATING + " DESC");
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to asynchronously load data.");
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            public void deliverResult(Cursor data) {
+                mFavouriteData = data;
+                super.deliverResult(data);
+            }
+        };
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-
+        if (data.getCount() == 0) {
+            rvFavourite.setVisibility(View.GONE);
+            tvFavourite.setVisibility(View.VISIBLE);
+        } else {
+            movieFavouriteAdapter.swapCursor(data);
+        }
     }
+
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
+        movieFavouriteAdapter.swapCursor(null);
     }
 }

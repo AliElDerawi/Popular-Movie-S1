@@ -19,9 +19,8 @@ public class MovieFavouriteAdapter extends RecyclerView.Adapter<MovieFavouriteAd
     private Context mContext;
     private Cursor mCursor;
 
-    public MovieFavouriteAdapter(Context context , Cursor cursor){
+    public MovieFavouriteAdapter(Context context ){
         this.mContext = context;
-        this.mCursor = cursor;
     }
 
 
@@ -38,18 +37,24 @@ public class MovieFavouriteAdapter extends RecyclerView.Adapter<MovieFavouriteAd
         holder.onBind(position);
     }
 
-    public void swapCursor(Cursor newCursor){
-        if (mCursor != null)
-            mCursor.close();
+    public Cursor swapCursor(Cursor newCursor){
+        if (mCursor == newCursor)
+            return null;
+
+        Cursor temp = mCursor;
+        this.mCursor = newCursor;
 
         if (newCursor != null) {
-            mCursor = newCursor;
             notifyDataSetChanged();
         }
+        return temp;
     }
 
     @Override
     public int getItemCount() {
+        if (mCursor == null){
+            return 0;
+        }
         return mCursor.getCount();
     }
 

@@ -1,5 +1,6 @@
 package com.nanodegree.movietime.util;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -18,11 +19,17 @@ public class Contracts {
     public static final String MY_PREF = "myPref";
     public static final String REVIEW_URL = "reviewUrl";
 
+    public static final String AUTHORITY = "com.nanodegree.movietime";
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    public static final String PATH_FAVOURITE = "favouritemovie";
+
     private Contracts(){
 
     }
 
     public static class FavouriteMovieEntry implements BaseColumns{
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVOURITE).build();
+
         public static final String TABLE_NAME = "favouritemovie";
         public static final String COLUMN_MOVIE_ID = "movieId";
         public static final String COLUMN_MOVIE_TITLE = "title";

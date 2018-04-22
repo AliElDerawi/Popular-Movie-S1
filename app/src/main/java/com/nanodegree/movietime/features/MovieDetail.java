@@ -3,17 +3,21 @@ package com.nanodegree.movietime.features;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +39,6 @@ import com.nanodegree.movietime.data.model.request.ReviewRequest;
 import com.nanodegree.movietime.data.model.request.ReviewResults;
 import com.nanodegree.movietime.data.model.request.TrailerRequest;
 import com.nanodegree.movietime.util.Contracts.FavouriteMovieEntry;
-import com.nanodegree.movietime.util.FavouriteMovieDbHelper;
 import com.nanodegree.movietime.util.GlideApp;
 import com.nanodegree.movietime.util.MySingleton;
 
@@ -61,10 +64,9 @@ import static com.nanodegree.movietime.util.Contracts.IMAGE_SIZE_FULL;
 import static com.nanodegree.movietime.util.Contracts.IMAGE_SIZE_POSTER;
 import static com.nanodegree.movietime.util.Contracts.MOVIE_REVIEW;
 import static com.nanodegree.movietime.util.Contracts.MOVIE_TRAILER;
-import static com.nanodegree.movietime.util.Contracts.MY_PREF;
 import static com.nanodegree.movietime.util.Contracts.REVIEW_URL;
 
-public class MovieDetail extends AppCompatActivity implements View.OnClickListener {
+public class MovieDetail extends AppCompatActivity implements View.OnClickListener , LoaderManager.LoaderCallbacks<Cursor> {
     @BindView(R.id.iv_poster)
     ImageView ivPoster;
     @BindView(R.id.toolbar_layout)
@@ -97,14 +99,14 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
     private ArrayList<TrailerResults> trailerResults;
     private ArrayList<ReviewResults> reviewResults;
 
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.Editor mEditor;
+
     private String txtTitle, txtDate, txtOverview;
     private Float rating;
     int movieId;
     private String movieUrlPoster = "";
-    private SQLiteDatabase sqLiteDatabase;
-    private Drawable ic_favourite;
+
+    private static final int FAVOURITE_LOADER_ID = 1;
+    private boolean isAdded;
 
 
     @Override
@@ -112,11 +114,6 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
-
-        mSharedPreferences = getSharedPreferences(MY_PREF, MODE_PRIVATE);
-        mEditor = mSharedPreferences.edit();
-        FavouriteMovieDbHelper dbHelper = new FavouriteMovieDbHelper(this);
-        sqLiteDatabase = dbHelper.getWritableDatabase();
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -134,6 +131,9 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
         Intent fromPosterActivityIntent = getIntent();
         fillUi(fromPosterActivityIntent);
 
+        if (isAdded){
+            fab.setImageResource(R.drawable.ic_fill_favorite);
+        }
 
         fab.setOnClickListener(this);
 
@@ -156,8 +156,15 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
                 }
             }
         });
+
+        getSupportLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportLoaderManager().restartLoader(FAVOURITE_LOADER_ID, null, this);
+    }
 
     private void fillUi(Intent fromPosterActivityIntent) {
 
@@ -203,14 +210,11 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
                 tvTrailerConnection.setVisibility(View.VISIBLE);
                 tvTrailerConnection.setVisibility(View.VISIBLE);
             }
-//
-            if (checkFavourite()) {
-                fab.setImageResource(R.drawable.ic_fill_favorite);
-            }
+            getSupportLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, this);
         }
     }
 
-    private long addToFavourite() {
+    private Uri addToFavourite() {
         ContentValues cv = new ContentValues();
         cv.put(FavouriteMovieEntry.COLUMN_MOVIE_ID, movieId);
         cv.put(FavouriteMovieEntry.COLUMN_MOVIE_TITLE, txtTitle);
@@ -218,7 +222,7 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
         cv.put(FavouriteMovieEntry.COLUMN_MOVIE_OVERVIEW, txtOverview);
         cv.put(FavouriteMovieEntry.COLUMN_MOVIE_POSTER, movieUrlPoster);
         cv.put(FavouriteMovieEntry.COLUMN_MOVIE_RELEASE_DATE, txtDate);
-        return sqLiteDatabase.insert(FavouriteMovieEntry.TABLE_NAME, null, cv);
+        return getContentResolver().insert(FavouriteMovieEntry.CONTENT_URI, cv);
     }
 
     private void requestTrailers(int movieId) {
@@ -264,6 +268,8 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
                 error.printStackTrace();
             }
         });
+
+//        request.setRetryPolicy(3);
         MySingleton.getInstance(getApplicationContext()).addToRequestQueue(request);
 
     }
@@ -295,8 +301,8 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
                         MovieReviewAdapter movieResultAdapter = new MovieReviewAdapter(getApplicationContext(), reviewResults, new OnItemClickListener() {
                             @Override
                             public void onItemClick(int position) {
-                                Intent fromDetailActivity = new Intent(getApplicationContext(),WebActivity.class);
-                                fromDetailActivity.putExtra(REVIEW_URL,reviewResults.get(position).getUrl());
+                                Intent fromDetailActivity = new Intent(getApplicationContext(), WebActivity.class);
+                                fromDetailActivity.putExtra(REVIEW_URL, reviewResults.get(position).getUrl());
                                 startActivity(fromDetailActivity);
 //                                Toast.makeText(getApplicationContext(), reviewResults.get(position).getUrl() + " ", Toast.LENGTH_LONG).show();
                             }
@@ -329,48 +335,96 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+
         if (view == fab) {
-            if (!checkFavourite()) {
-                long number = addToFavourite();
-                if (number != 0) {
+            if (!isAdded) {
+                Uri insertUri = addToFavourite();
+                if (insertUri != null) {
                     fab.setImageResource(R.drawable.ic_fill_favorite);
+                    isAdded = true;
                     Snackbar.make(view, "Added Successfully!", Snackbar.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(view, "Sorry, Some errors happen!", Snackbar.LENGTH_LONG).show();
                 }
-            }else {
+            } else {
                 Snackbar.make(view, "Already Added!", Snackbar.LENGTH_LONG).show();
             }
         }
     }
 
-    private Cursor getAllMovie() {
-        return sqLiteDatabase.query(
-                FavouriteMovieEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                FavouriteMovieEntry.COLUMN_MOVIE_RATING
-        );
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+
+        return new AsyncTaskLoader<Cursor>(getApplicationContext()) {
+            Cursor mFavouriteData = null;
+
+            @Override
+            protected void onStartLoading() {
+                if (mFavouriteData != null){
+                    deliverResult(mFavouriteData);
+                } else {
+                    forceLoad();
+                }
+            }
+
+            @Nullable
+            @Override
+            public Cursor loadInBackground() {
+                try {
+                    Uri uri = FavouriteMovieEntry.CONTENT_URI;
+                    uri = uri.buildUpon().appendPath(String.valueOf(movieId)).build();
+                    return  getApplicationContext().getContentResolver().query(uri,
+                            null,
+                            null,
+                            null,
+                            null
+                            );
+                } catch (Exception e){
+                    Log.e(TAG, "Failed to asynchronously load data.");
+                    e.printStackTrace();
+                    return null;
+                }
+
+            }
+
+            public void deliverResult(Cursor data){
+                mFavouriteData = data;
+                super.deliverResult(data);
+            }
+        };
+
     }
 
-    private boolean checkFavourite(){
-        Cursor cursor = getAllMovie();
-        if (cursor == null) return false;
-        boolean isExist = false;
-        cursor.moveToFirst();
-        try {
-            while (!cursor.isAfterLast()) {
-                if (cursor.getInt(cursor.getColumnIndex(FavouriteMovieEntry.COLUMN_MOVIE_ID)) == movieId) {
-                    isExist = true;
-                    break;
-                }
-                cursor.moveToNext();
-            }
-        }finally {
-            cursor.close();
-        }
-        Log.d(TAG,"Is Added to Favourite: " + String.valueOf(isExist));
-        return isExist;
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+
+        if (data.getCount() > 0){
+           isAdded  = true;
+           fab.setImageResource(R.drawable.ic_fill_favorite);
+           }
     }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        outState.putBoolean("isAdded",isAdded);
+        outState.getInt("movieId",movieId);
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        isAdded = savedInstanceState.getBoolean("isAdded");
+        movieId = savedInstanceState.getInt("movieId");
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+
+
+
 }
