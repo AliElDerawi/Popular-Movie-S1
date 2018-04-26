@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import org.parceler.Parcel;
 
 @Parcel
-public class Results {
+public class MovieResults {
 
 
     @SerializedName("vote_count")
@@ -31,7 +31,7 @@ public class Results {
     @SerializedName("release_date")
     private String releaseDate;
 
-    Results() {
+    MovieResults() {
     }
 
     public Integer getVoteCount() {

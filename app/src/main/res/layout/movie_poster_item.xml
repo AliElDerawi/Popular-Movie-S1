@@ -23,6 +23,21 @@
          android:adjustViewBounds="true"
          android:maxHeight="@dimen/poster_size"
          />
+
+        <TextView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/round_corner_text"
+            android:layout_gravity="right"
+            android:layout_margin="8dp"
+            android:text="10"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:id="@+id/tv_rating"
+            />
+
     </android.support.v7.widget.CardView>
 
 
