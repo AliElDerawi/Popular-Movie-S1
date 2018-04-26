@@ -1,10 +1,13 @@
-# Popular Movie Stage 01:
+# Popular Movie Stage 01 & 02:
 
 
-Popular Movie Stage 01 is an app for movies fans , it has been developed for **Google Android NanoDegree Program**.
+Popular Movie Stage 01 & 02 is an app for movies fans , it has been developed for **Google Android NanoDegree Program**.
 Main features of this realese are:
 * Abllitiy to show Top Rated Movies | Most Popular Movies with their Poster.
-* Ability to read more information about available films include (Title, Rating, Release Date , Overview ).
+* Ability to read more information about available films include (Title, Rating, Release Date , Overview , Trailers, and Reviews ).
+* Ability to movies to Favourite list, and so read it's detail ofline anytime.
+* Ability to watch officail trailers for a movie in YouTube inside the app.
+* Ability to read reviews for a movie inside by a browser inside the app (WebView).
 
 
 What External library used:
@@ -19,6 +22,8 @@ What External library used:
 * [Gson](https://github.com/google/gson) , for JSON Parsing.
 
 * [MaterialRatingBar](https://github.com/DreaminginCodeZH/MaterialRatingBar) , for Rating view.
+
+* [Parcel](https://github.com/johncarl81/parceler) , to serialize Java Objects between Contexts.
 
 
 Useful links:
@@ -42,7 +47,7 @@ SnapShots from the app:
 * Main Screen:
 
 <p align="center">
-  <img src="./images/activity_main.png" width="300" height="530" />
+  <img src="./images/activity_main%20.png" width="300" height="530" />
 </p>
 
 * No Internet Screen:
@@ -57,6 +62,13 @@ SnapShots from the app:
 <p align="center">
 <img src="./images/activity_detail.png" width="300" height="530" />
 </p>
+
+* Favourite Screen:
+
+<p align="center">
+<img src="./images/activity_favourite.png" width="300" height="530" />
+</p>
+
 
 
 
