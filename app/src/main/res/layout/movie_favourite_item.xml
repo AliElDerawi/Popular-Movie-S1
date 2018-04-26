@@ -79,6 +79,15 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="@string/text_rating"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                            android:textColor="@color/colorOrange_01"
+                            android:textStyle="bold"
+                            android:paddingRight="8dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:id="@+id/tv_rate"
                             android:text="10/10"
                             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"

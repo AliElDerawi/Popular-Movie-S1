@@ -1,4 +1,4 @@
-package com.nanodegree.movietime.features;
+package com.nanodegree.movietime.features.activities;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;

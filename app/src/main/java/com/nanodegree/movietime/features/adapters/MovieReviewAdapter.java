@@ -1,4 +1,4 @@
-package com.nanodegree.movietime.features;
+package com.nanodegree.movietime.features.adapters;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -25,7 +25,7 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     private ArrayList<ReviewResults> results;
     private final OnItemClickListener listener;
 
-    MovieReviewAdapter(Context mContext, ArrayList<ReviewResults> results , OnItemClickListener listener) {
+    public MovieReviewAdapter(Context mContext, ArrayList<ReviewResults> results, OnItemClickListener listener) {
         super();
         this.mContext = mContext;
         this.results = results;

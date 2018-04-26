@@ -1,4 +1,4 @@
-package com.nanodegree.movietime.features;
+package com.nanodegree.movietime.features.fragments;
 
 
 import android.database.Cursor;
@@ -23,10 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nanodegree.movietime.R;
+import com.nanodegree.movietime.features.adapters.MovieFavouriteAdapter;
 import com.nanodegree.movietime.util.Contracts.FavouriteMovieEntry;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.nanodegree.movietime.features.activities.HomeActivity.CURRENT_FRAGMENT;
+import static com.nanodegree.movietime.util.Contracts.currentFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -162,5 +166,11 @@ public class FavouriteFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         movieFavouriteAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(CURRENT_FRAGMENT,currentFragment);
+        super.onSaveInstanceState(outState);
     }
 }

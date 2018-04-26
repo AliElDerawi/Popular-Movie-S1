@@ -1,13 +1,9 @@
-package com.nanodegree.movietime.features;
+package com.nanodegree.movietime.features.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -30,6 +25,8 @@ import com.nanodegree.movietime.R;
 import com.nanodegree.movietime.data.model.MovieResults;
 import com.nanodegree.movietime.data.model.OnItemClickListener;
 import com.nanodegree.movietime.data.model.request.MovieRequest;
+import com.nanodegree.movietime.features.adapters.MoviePosterAdapter;
+import com.nanodegree.movietime.features.activities.MovieDetail;
 import com.nanodegree.movietime.util.MySingleton;
 
 import org.json.JSONObject;
@@ -40,14 +37,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.android.volley.Request.Method.GET;
-import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEDATE;
-import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEID;
-import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEOVERVIEW;
-import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIEPOSTERPATH;
-import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIERATING;
-import static com.nanodegree.movietime.features.MoviePosterAdapter.MOVIETITLE;
+import static com.nanodegree.movietime.features.activities.HomeActivity.CURRENT_FRAGMENT;
+import static com.nanodegree.movietime.features.adapters.MoviePosterAdapter.MOVIE_DATE;
+import static com.nanodegree.movietime.features.adapters.MoviePosterAdapter.MOVIE_ID;
+import static com.nanodegree.movietime.features.adapters.MoviePosterAdapter.MOVIE_OVERVIEW;
+import static com.nanodegree.movietime.features.adapters.MoviePosterAdapter.MOVIE_POSTER_PATH;
+import static com.nanodegree.movietime.features.adapters.MoviePosterAdapter.MOVIE_RATING;
+import static com.nanodegree.movietime.features.adapters.MoviePosterAdapter.MOVIE_TITLE;
+import static com.nanodegree.movietime.util.ActivityUtils.isOnline;
+import static com.nanodegree.movietime.util.ActivityUtils.showSnackBar;
 import static com.nanodegree.movietime.util.Contracts.BASE_URL;
 import static com.nanodegree.movietime.util.Contracts.MOST_POPULAR_MOVIE;
+import static com.nanodegree.movietime.util.Contracts.currentFragment;
 
 
 public class MostPopularFragment extends Fragment implements View.OnClickListener {
@@ -94,7 +95,7 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
     }
 
     private void requestVideo(){
-        if (isOnline()){
+        if (isOnline(getContext())){
             requestTopRatedMovie();
         }else{
             internetLayout.setVisibility(View.VISIBLE);
@@ -129,12 +130,12 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
                             @Override
                             public void onItemClick(int position) {
                                 Intent toMovieDetailIntent = new Intent(getContext(),MovieDetail.class);
-                                toMovieDetailIntent.putExtra(MOVIEPOSTERPATH,results.get(position).getPosterPath());
-                                toMovieDetailIntent.putExtra(MOVIEOVERVIEW,results.get(position).getOverview());
-                                toMovieDetailIntent.putExtra(MOVIERATING,results.get(position).getAverageScore());
-                                toMovieDetailIntent.putExtra(MOVIETITLE,results.get(position).getTitle().trim());
-                                toMovieDetailIntent.putExtra(MOVIEDATE,results.get(position).getReleaseDate());
-                                toMovieDetailIntent.putExtra(MOVIEID,results.get(position).getId());
+                                toMovieDetailIntent.putExtra(MOVIE_POSTER_PATH,results.get(position).getPosterPath());
+                                toMovieDetailIntent.putExtra(MOVIE_OVERVIEW,results.get(position).getOverview());
+                                toMovieDetailIntent.putExtra(MOVIE_RATING,results.get(position).getAverageScore());
+                                toMovieDetailIntent.putExtra(MOVIE_TITLE,results.get(position).getTitle().trim());
+                                toMovieDetailIntent.putExtra(MOVIE_DATE,results.get(position).getReleaseDate());
+                                toMovieDetailIntent.putExtra(MOVIE_ID,results.get(position).getId());
                                 startActivity(toMovieDetailIntent);
                             }
                         });
@@ -157,32 +158,23 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
         MySingleton.getInstance(getContext()).addToRequestQueue(request);
     }
 
-    private boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-    }
-
     @Override
     public void onClick(View view) {
         if (view == resetConnection){
-            if (isOnline()){
+            if (isOnline(view.getContext())){
                 internetLayout.setVisibility(View.GONE);
                 requestTopRatedMovie();
             } else {
-                showSnackBar(view);
+                showSnackBar(getContext(),view,getContext().getResources().getString(R.string.no_internet_message));
             }
         }
     }
 
-    private void showSnackBar(View view){
-        Snackbar snackbar =  Snackbar.make(view,getContext().getResources().getString(R.string.no_internet_message),Snackbar.LENGTH_LONG);
-        View sbView = snackbar.getView();
-        sbView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(getResources().getColor(R.color.color_Blue_03));
-        snackbar.show();
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(CURRENT_FRAGMENT,currentFragment);
+        super.onSaveInstanceState(outState);
     }
 }

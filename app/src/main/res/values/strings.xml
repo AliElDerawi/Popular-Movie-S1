@@ -16,5 +16,7 @@
     <string name="text_review">Review</string>
     <string name="title_author">Author: </string>
     <string name="title_movie_detail">Movie Information</string>
+    <string name="message_empty_trailers">There is no Trailers for this Movie ~</string>
+    <string name="message_empty_reviews">There is no reviews for this Movie ~</string>
 
 </resources>

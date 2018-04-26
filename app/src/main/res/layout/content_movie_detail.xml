@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".features.MovieDetail"
+    tools:context=".features.activities.MovieDetail"
     tools:showIn="@layout/activity_movie_detail"
     >
 
@@ -71,9 +71,23 @@
                 android:numStars="5"
                 android:stepSize="0.1"
                 app:mrb_fillBackgroundStars="true"
-                app:mrb_progressTint="@color/colorOrange_01"
+                app:mrb_progressTint="#ff9833"
                 android:rating="2"
                 style="@style/Widget.MaterialRatingBar.RatingBar"
+                />
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/round_corner_text"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:text="10"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:id="@+id/tv_rating"
                 />
 
         </LinearLayout>
@@ -136,6 +150,9 @@
                 android:visibility="gone"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:text="@string/no_internet_message"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/colorOrange_01"
+                android:gravity="center"
                 />
 
                 <TextView
@@ -166,6 +183,9 @@
                 android:visibility="gone"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:text="@string/no_internet_message"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/colorOrange_01"
+                android:gravity="center"
                 />
         </LinearLayout>
     </RelativeLayout>

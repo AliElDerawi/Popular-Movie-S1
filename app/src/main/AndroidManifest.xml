@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".features.SplashActivity"
+            android:name=".features.activities.SplashActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -25,17 +25,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".features.HomeActivity"
+            android:name=".features.activities.HomeActivity"
             android:launchMode="singleTop"
            ></activity>
         <activity
-            android:name=".features.MovieDetail"
+            android:name=".features.activities.MovieDetail"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".features.HomeActivity"
+            android:parentActivityName=".features.activities.HomeActivity"
             android:launchMode="singleTask"
             ></activity>
-        <activity android:name=".features.WebActivity"
-            android:parentActivityName=".features.MovieDetail"
+        <activity android:name=".features.activities.WebActivity"
+            android:parentActivityName=".features.activities.MovieDetail"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             />

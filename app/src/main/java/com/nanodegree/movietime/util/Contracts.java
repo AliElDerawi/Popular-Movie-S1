@@ -23,6 +23,8 @@ public class Contracts {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
     public static final String PATH_FAVOURITE = "favouritemovie";
 
+    public static String currentFragment = "";
+
     private Contracts(){
 
     }

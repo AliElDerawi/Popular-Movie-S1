@@ -1,4 +1,4 @@
-package com.nanodegree.movietime.features;
+package com.nanodegree.movietime.features.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.nanodegree.movietime.R;
 import com.nanodegree.movietime.util.Contracts.FavouriteMovieEntry;
 import com.nanodegree.movietime.util.GlideApp;
+
+import static com.nanodegree.movietime.util.ActivityUtils.getYear;
 
 
 public class MovieFavouriteAdapter extends RecyclerView.Adapter<MovieFavouriteAdapter.ViewHolder> {
@@ -83,9 +85,11 @@ public class MovieFavouriteAdapter extends RecyclerView.Adapter<MovieFavouriteAd
             itemView.setTag(mCursor.getLong(mCursor.getColumnIndex(FavouriteMovieEntry._ID)));
             tvTitle.setText(mCursor.getString(mCursor.getColumnIndex(FavouriteMovieEntry.COLUMN_MOVIE_TITLE)));
             tvOverview.setText(mCursor.getString(mCursor.getColumnIndex(FavouriteMovieEntry.COLUMN_MOVIE_OVERVIEW)));
-            tvDate.setText(mCursor.getString(mCursor.getColumnIndex(FavouriteMovieEntry.COLUMN_MOVIE_RELEASE_DATE)));
+            String date = mCursor.getString(mCursor.getColumnIndex(FavouriteMovieEntry.COLUMN_MOVIE_RELEASE_DATE));
+            tvDate.setText(getYear(date));
             tvRating.setText(String.valueOf(mCursor.getFloat(mCursor.getColumnIndex(FavouriteMovieEntry.COLUMN_MOVIE_RATING))));
             GlideApp.with(mContext).load(mCursor.getString(mCursor.getColumnIndex(FavouriteMovieEntry.COLUMN_MOVIE_POSTER))).error(R.drawable.placeholder_poster).placeholder(R.drawable.placeholder_poster).into(ivPoster);
         }
+
     }
 }

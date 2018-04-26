@@ -40,9 +40,13 @@ public class FavouriteContentProvider extends ContentProvider {
         return true;
     }
 
+
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection,
+                        @Nullable String selection, @Nullable String[] selectionArgs,
+                        @Nullable String sortOrder) {
+
         final SQLiteDatabase sqLiteDatabase = mFavouriteDbHelper.getReadableDatabase();
         Cursor mReturnCursor;
         int match = sUriMatcher.match(uri);
@@ -134,4 +138,6 @@ public class FavouriteContentProvider extends ContentProvider {
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
         return 0;
     }
+
+
 }

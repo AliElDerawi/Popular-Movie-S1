@@ -17,7 +17,8 @@ public class FavouriteMovieDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        final String SQL_CREATE_FAVOURITEMOVIE_TABLE = "CREATE TABLE " + FavouriteMovieEntry.TABLE_NAME
+        final String SQL_CREATE_FAVOURITEMOVIE_TABLE = "CREATE TABLE "
+                + FavouriteMovieEntry.TABLE_NAME
                 + " ("
                 + FavouriteMovieEntry._ID  + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + FavouriteMovieEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL,"
@@ -34,8 +35,8 @@ public class FavouriteMovieDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + FavouriteMovieEntry.TABLE_NAME );
         onCreate(sqLiteDatabase);
     }
+
 }

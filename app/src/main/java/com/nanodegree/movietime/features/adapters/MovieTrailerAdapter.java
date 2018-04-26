@@ -1,4 +1,4 @@
-package com.nanodegree.movietime.features;
+package com.nanodegree.movietime.features.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -24,7 +24,7 @@ public class MovieTrailerAdapter extends RecyclerView.Adapter<MovieTrailerAdapte
     private ArrayList<TrailerResults> results;
     private final OnItemClickListener listener;
 
-    MovieTrailerAdapter(Context mContext, ArrayList<TrailerResults> results , OnItemClickListener listener) {
+    public MovieTrailerAdapter(Context mContext, ArrayList<TrailerResults> results, OnItemClickListener listener) {
         super();
         this.mContext = mContext;
         this.results = results;
