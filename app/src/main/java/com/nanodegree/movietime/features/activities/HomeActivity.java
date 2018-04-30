@@ -17,7 +17,9 @@ import com.nanodegree.movietime.util.ActivityUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.nanodegree.movietime.util.Contracts.BUNDLE_RECYCLER_LAYOUT;
 import static com.nanodegree.movietime.util.Contracts.currentFragment;
+import static com.nanodegree.movietime.util.Contracts.listState;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -136,6 +138,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         currentFragment = savedInstanceState.getString(CURRENT_FRAGMENT);
+        listState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
         Log.d(TAG, "onRestoreInstanceState: " + currentFragment);
         super.onRestoreInstanceState(savedInstanceState);
     }

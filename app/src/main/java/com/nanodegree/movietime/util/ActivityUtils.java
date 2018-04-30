@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class ActivityUtils {
+public final class ActivityUtils {
 
 
     /**

@@ -35,8 +35,6 @@ public class WebActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-//        WebSettings webSettings = webView.getSettings();
-//        webSettings.setJavaScriptEnabled(true);
         Intent fromDetailActivity = getIntent();
         if (fromDetailActivity.hasExtra(REVIEW_URL)){
             String webUrl = fromDetailActivity.getStringExtra(REVIEW_URL);
