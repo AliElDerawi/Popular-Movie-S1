@@ -1,7 +1,6 @@
 package com.nanodegree.movietime.util;
 
 import android.net.Uri;
-import android.os.Parcelable;
 import android.provider.BaseColumns;
 
 /**
@@ -25,7 +24,6 @@ public class Contracts {
     public static final String PATH_FAVOURITE = "favouritemovie";
 
     public static String currentFragment = "";
-    public static Parcelable listState;
     public static final String BUNDLE_RECYCLER_LAYOUT = "listState";
 
     private Contracts(){

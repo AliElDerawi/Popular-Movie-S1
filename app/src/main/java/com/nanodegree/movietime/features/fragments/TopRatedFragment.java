@@ -68,7 +68,7 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
         // Required empty public constructor
     }
 
-    public static Parcelable listState;
+    private Parcelable listState = null;
     private GridLayoutManager layoutManager;
     private int position ;
 
@@ -195,6 +195,7 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(CURRENT_FRAGMENT,currentFragment);
+
         outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, layoutManager.onSaveInstanceState());
     }
 

@@ -2,6 +2,7 @@ package com.nanodegree.movietime.features.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -61,6 +62,7 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
     private ArrayList<MovieResults> results = new ArrayList<>();
     private final String TAG = "MostPopularFragment";
     private GridLayoutManager layoutManager;
+    private Parcelable listState;
 
     public MostPopularFragment() {
         // Required empty public constructor
@@ -89,6 +91,9 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
 
         layoutManager = new GridLayoutManager(getContext(),
                 getResources().getInteger(R.integer.column_span));
+
+        if (savedInstanceState != null)
+            listState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
 
         rvImagePoster.setLayoutManager(layoutManager);
         rvImagePoster.setNestedScrollingEnabled(true);
@@ -143,6 +148,11 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
                         });
                         rvImagePoster.setAdapter(moviePosterAdapter);
                         rvImagePoster.setHasFixedSize(true);
+                        if (listState != null){
+                            rvImagePoster.getLayoutManager().onRestoreInstanceState(listState);
+                            Log.d("Test02","ListState: " + listState);
+                            listState = null;
+                        }
                     }
 
 
