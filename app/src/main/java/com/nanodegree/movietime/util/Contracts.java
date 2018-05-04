@@ -24,6 +24,7 @@ public class Contracts {
     public static final String PATH_FAVOURITE = "favouritemovie";
 
     public static String currentFragment = "";
+    public static final String BUNDLE_RECYCLER_LAYOUT = "listState";
 
     private Contracts(){
 

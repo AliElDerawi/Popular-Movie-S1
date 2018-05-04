@@ -75,7 +75,7 @@ import static com.nanodegree.movietime.util.Contracts.MOVIE_REVIEW;
 import static com.nanodegree.movietime.util.Contracts.MOVIE_TRAILER;
 import static com.nanodegree.movietime.util.Contracts.REVIEW_URL;
 
-public class MovieDetail extends AppCompatActivity implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class MovieDetailActivity extends AppCompatActivity implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     @BindView(R.id.iv_poster)
     ImageView ivPoster;
     @BindView(R.id.toolbar_layout)
@@ -124,7 +124,7 @@ public class MovieDetail extends AppCompatActivity implements View.OnClickListen
     private boolean isAdded;
     private String trailerUri;
     private AlertDialog alertDialog;
-    long movieFavouriteId = 0 ;
+    private long movieFavouriteId = 0 ;
 
 
     @Override

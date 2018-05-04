@@ -29,13 +29,13 @@
             android:launchMode="singleTop"
            ></activity>
         <activity
-            android:name=".features.activities.MovieDetail"
+            android:name=".features.activities.MovieDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".features.activities.HomeActivity"
             android:launchMode="singleTask"
             ></activity>
         <activity android:name=".features.activities.WebActivity"
-            android:parentActivityName=".features.activities.MovieDetail"
+            android:parentActivityName=".features.activities.MovieDetailActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"
             />

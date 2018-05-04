@@ -101,7 +101,6 @@ public class FavouriteContentProvider extends ContentProvider {
                 long id = sqLiteDatabase.insert(TABLE_NAME,null,contentValues);
                 if (id >0){
                     returnUri = ContentUris.withAppendedId(uri,id);
-                    getContext().getContentResolver().notifyChange(uri,null);
                 }else {
                     throw new SQLException("Fail to insert row into " + uri);
                 }
@@ -110,6 +109,7 @@ public class FavouriteContentProvider extends ContentProvider {
             default:
                 throw  new UnsupportedOperationException("Unknown uri : " + uri);
         }
+        getContext().getContentResolver().notifyChange(uri, null);
         return returnUri;
     }
 

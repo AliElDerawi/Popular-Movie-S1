@@ -2,6 +2,7 @@ package com.nanodegree.movietime.features.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,8 +26,8 @@ import com.nanodegree.movietime.R;
 import com.nanodegree.movietime.data.model.MovieResults;
 import com.nanodegree.movietime.data.model.OnItemClickListener;
 import com.nanodegree.movietime.data.model.request.MovieRequest;
+import com.nanodegree.movietime.features.activities.MovieDetailActivity;
 import com.nanodegree.movietime.features.adapters.MoviePosterAdapter;
-import com.nanodegree.movietime.features.activities.MovieDetail;
 import com.nanodegree.movietime.util.MySingleton;
 
 import org.json.JSONObject;
@@ -47,6 +48,7 @@ import static com.nanodegree.movietime.features.adapters.MoviePosterAdapter.MOVI
 import static com.nanodegree.movietime.util.ActivityUtils.isOnline;
 import static com.nanodegree.movietime.util.ActivityUtils.showSnackBar;
 import static com.nanodegree.movietime.util.Contracts.BASE_URL;
+import static com.nanodegree.movietime.util.Contracts.BUNDLE_RECYCLER_LAYOUT;
 import static com.nanodegree.movietime.util.Contracts.MOST_POPULAR_MOVIE;
 import static com.nanodegree.movietime.util.Contracts.currentFragment;
 
@@ -59,6 +61,8 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
     private Button resetConnection;
     private ArrayList<MovieResults> results = new ArrayList<>();
     private final String TAG = "MostPopularFragment";
+    private GridLayoutManager layoutManager;
+    private Parcelable listState;
 
     public MostPopularFragment() {
         // Required empty public constructor
@@ -85,9 +89,12 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
         resetConnection.setOnClickListener(this);
         internetLayout.setVisibility(View.GONE);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),
+        layoutManager = new GridLayoutManager(getContext(),
                 getResources().getInteger(R.integer.column_span));
-//        rvImagePoster.setLayoutManager(new GridLayoutManager(getContext(),2,GridLayoutManager.HORIZONTAL,false));
+
+        if (savedInstanceState != null)
+            listState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
+
         rvImagePoster.setLayoutManager(layoutManager);
         rvImagePoster.setNestedScrollingEnabled(true);
         requestVideo();
@@ -129,7 +136,7 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
                         MoviePosterAdapter moviePosterAdapter = new MoviePosterAdapter(getContext(), results, new OnItemClickListener() {
                             @Override
                             public void onItemClick(int position) {
-                                Intent toMovieDetailIntent = new Intent(getContext(),MovieDetail.class);
+                                Intent toMovieDetailIntent = new Intent(getContext(),MovieDetailActivity.class);
                                 toMovieDetailIntent.putExtra(MOVIE_POSTER_PATH,results.get(position).getPosterPath());
                                 toMovieDetailIntent.putExtra(MOVIE_OVERVIEW,results.get(position).getOverview());
                                 toMovieDetailIntent.putExtra(MOVIE_RATING,results.get(position).getAverageScore());
@@ -141,6 +148,11 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
                         });
                         rvImagePoster.setAdapter(moviePosterAdapter);
                         rvImagePoster.setHasFixedSize(true);
+                        if (listState != null){
+                            rvImagePoster.getLayoutManager().onRestoreInstanceState(listState);
+                            Log.d("Test02","ListState: " + listState);
+                            listState = null;
+                        }
                     }
 
 
@@ -175,6 +187,7 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString(CURRENT_FRAGMENT,currentFragment);
+        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, layoutManager.onSaveInstanceState());
         super.onSaveInstanceState(outState);
     }
 }
