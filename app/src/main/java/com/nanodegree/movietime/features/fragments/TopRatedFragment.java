@@ -3,7 +3,6 @@ package com.nanodegree.movietime.features.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -60,17 +59,16 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
     @BindView(R.id.rv_image_poster)
     RecyclerView rvImagePoster;
     private RelativeLayout internetLayout;
-    private ProgressBar mProgressBar ;
     private Button resetConnection;
+    private ProgressBar mProgressBar;
     private ArrayList<MovieResults> results = new ArrayList<>();
     private final String TAG = "TopRatedFragment";
     public TopRatedFragment() {
         // Required empty public constructor
     }
 
-    private Parcelable listState = null;
     private GridLayoutManager layoutManager;
-    private int position ;
+    private int position  = 0 ;
 
 
 
@@ -80,7 +78,7 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_top_rated, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this,view);;
         return view;
     }
 
@@ -88,19 +86,24 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mProgressBar = getActivity().findViewById(R.id.progressBar);
+        mProgressBar = ButterKnife.findById(getActivity(),R.id.progressBar);
         mProgressBar.setVisibility(View.GONE);
-        internetLayout = getActivity().findViewById(R.id.layout_no_internet);
-        resetConnection = getActivity().findViewById(R.id.btn_reset_connection);
+        internetLayout = ButterKnife.findById(getActivity(),R.id.layout_no_internet);
+        resetConnection = ButterKnife.findById(getActivity(),R.id.btn_reset_connection);
         resetConnection.setOnClickListener(this);
         internetLayout.setVisibility(View.GONE);
 
+        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_RECYCLER_LAYOUT)){
+            position = savedInstanceState.getInt(BUNDLE_RECYCLER_LAYOUT);
+        }
+
         layoutManager = new GridLayoutManager(getContext(),
                 getResources().getInteger(R.integer.column_span));
+        layoutManager.scrollToPosition(position);
 
         rvImagePoster.setLayoutManager(layoutManager);
+        layoutManager.scrollToPosition(position);
         rvImagePoster.setNestedScrollingEnabled(true);
-
 
         requestVideo();
 
@@ -117,8 +120,7 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
     private void requestTopRatedMovie(){
 
         mProgressBar.setVisibility(View.VISIBLE);
-        String apiKey = BuildConfig.API_KEY;
-        String url = BASE_URL + TOP_RATED_MOVIE +"?api_key="+ apiKey;
+        String url = BASE_URL + TOP_RATED_MOVIE +"?api_key="+ BuildConfig.API_KEY;
         JSONObject body = new JSONObject();
 
         Log.d(TAG, "TopRatedFragment: url > " + url);
@@ -156,11 +158,6 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
                         rvImagePoster.setAdapter(moviePosterAdapter);
                         rvImagePoster.setHasFixedSize(true);
 
-                        if (listState != null){
-                            rvImagePoster.getLayoutManager().onRestoreInstanceState(listState);
-                            Log.d("Test02","ListState: " + listState);
-                            listState = null;
-                        }
 
                     }
 
@@ -193,17 +190,15 @@ public class TopRatedFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+
+        int position = layoutManager.findFirstVisibleItemPosition();
+        int position2 = layoutManager.findFirstCompletelyVisibleItemPosition();
+        Log.d("Test03" , "OnSaveInstance: " + position + " " + position2);
         outState.putString(CURRENT_FRAGMENT,currentFragment);
+        outState.putInt(BUNDLE_RECYCLER_LAYOUT, position);
 
-        outState.putParcelable(BUNDLE_RECYCLER_LAYOUT, layoutManager.onSaveInstanceState());
-    }
+        super.onSaveInstanceState(outState);
 
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null)
-        listState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
     }
 }
 

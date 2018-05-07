@@ -243,9 +243,9 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
         return getContentResolver().insert(FavouriteMovieEntry.CONTENT_URI, cv);
     }
 
+
     private void requestTrailers(int movieId) {
-        String apiKey = BuildConfig.API_KEY;
-        String url = BASE_URL + movieId + MOVIE_TRAILER + "?api_key=" + apiKey;
+        String url = BASE_URL + movieId + MOVIE_TRAILER + "?api_key=" + BuildConfig.API_KEY;
         JSONObject body = new JSONObject();
 
         Log.d(TAG, "MovieDetail Trailers: url > " + url);
@@ -303,8 +303,7 @@ public class MovieDetailActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void requestReviews(int movieId) {
-        String apiKey = BuildConfig.API_KEY;
-        String url = BASE_URL + movieId + MOVIE_REVIEW + "?api_key=" + apiKey;
+        String url = BASE_URL + movieId + MOVIE_REVIEW + "?api_key=" + BuildConfig.API_KEY;
         JSONObject body = new JSONObject();
 
         Log.d(TAG, "MovieDetail Reviews: url > " + url);

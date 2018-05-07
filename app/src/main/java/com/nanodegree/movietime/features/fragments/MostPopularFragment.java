@@ -82,10 +82,10 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mProgressBar = getActivity().findViewById(R.id.progressBar);
+        mProgressBar = ButterKnife.findById(getActivity(),R.id.progressBar);
         mProgressBar.setVisibility(View.GONE);
-        internetLayout = getActivity().findViewById(R.id.layout_no_internet);
-        resetConnection = getActivity().findViewById(R.id.btn_reset_connection);
+        internetLayout = ButterKnife.findById(getActivity(),R.id.layout_no_internet);
+        resetConnection = ButterKnife.findById(getActivity(),R.id.btn_reset_connection);
         resetConnection.setOnClickListener(this);
         internetLayout.setVisibility(View.GONE);
 
@@ -112,8 +112,7 @@ public class MostPopularFragment extends Fragment implements View.OnClickListene
     private void requestTopRatedMovie(){
 
         mProgressBar.setVisibility(View.VISIBLE);
-        String apiKey = BuildConfig.API_KEY;
-        String url = BASE_URL + MOST_POPULAR_MOVIE +"?api_key="+ apiKey;
+        String url = BASE_URL + MOST_POPULAR_MOVIE +"?api_key="+ BuildConfig.API_KEY;
         JSONObject body = new JSONObject();
 
         Log.d(TAG, "TopRatedFragment: url > " + url);
